@@ -17,8 +17,8 @@ public class Machine {
 	
 	}
 	
-	public String crypter(String c){
-		return "lettre cryptee";
+	public char crypter(char c){
+		return 'z';
 	}
 	
 	public String decrypter(String c){
