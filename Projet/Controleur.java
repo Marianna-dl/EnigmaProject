@@ -45,11 +45,11 @@ public class Controleur implements ActionListener, KeyListener{
 				System.out.println(r1);
 			}
 			if(r2>=1 && r2<=26){
-				//this.modele.getRotor(0).setPosition(r2);
+				//this.modele.getRotor(1).setPosition(r2);
 				System.out.println(r2);
 			}
 			if(r3>=1 && r3<=26){
-				//this.modele.getRotor(0).setPosition(r3);
+				//this.modele.getRotor(2).setPosition(r3);
 				System.out.println(r3);
 			}
 		}
@@ -90,11 +90,13 @@ public class Controleur implements ActionListener, KeyListener{
 		if(e.getSource()==this.vue.getTextCrypt()){
 			if(this.vue.getTextClear().getText().length()>0){
 				this.vue.getTextClear().setText("");
-				this.vue.getTextCrypt().setText("");
+				this.vue.getTextCrypt().setText(""+e.getKeyChar());
+				System.out.println("yo");
 			}
-			if(e.getKeyChar()!=' ' && !(e.getKeyCode()==KeyEvent.VK_BACK_SPACE)){
+			/*if(e.getKeyChar()!=' ' && !(e.getKeyCode()==KeyEvent.VK_BACK_SPACE)){
 				this.vue.getTextCrypt().setText(this.vue.getTextCrypt().getText()+e.getKeyChar());
-			}
+				System.out.println("yop");
+			}*/
 		}
 		
 	}
