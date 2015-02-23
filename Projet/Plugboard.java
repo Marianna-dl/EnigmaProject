@@ -5,9 +5,9 @@ public class Plugboard {
 	
 	public Plugboard(){
 		//Initialisation par défaut (les lettres correspondent à elles mêmes)
-		this.plugTab = new int[]{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
+		this.plugTab = new int[]{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46};
 		/*	Initialisation avec des valeurs mélangées (20 couples de lettres)
-		 *	this.plugTab = new int[]{22,4,17,14,1,5,25,19,12,9,21,11,8,23,3,16,15,13,2,18,7,20,10,0,13,24,6};
+		 *	this.plugTab = new int[]{0,1,2,3,4,5,6,7,8,9,10,33,15,28,25,12,16,36,30,23,20,32,22,19,34,14,27,26,13,29,18,31,21,11,24,35,17,37,38,39,40,41,42,43,44,45,46};
 		 */
 		 
 	}
