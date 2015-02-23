@@ -6,9 +6,10 @@ public class Rotor {
 	
 	public Rotor(int[] tab,int pos){
 		this.parcoursAller=tab;
-		this.parcoursRetour= new int[26];
+		this.parcoursRetour= new int[47];
 		this.createMirror();
-		//position
+		this.avancer(pos);
+		this.position=pos;
 	}
 	public void createMirror(){
 		for(int i=0;i<parcoursAller.length;i++){
@@ -32,15 +33,15 @@ public class Rotor {
 	public void avancer(int i){
 		int k=0;
 		while(k<i){
-			int temp; 
-			for(int j=0;j<parcoursAller.length/2;j++){
-				temp=parcoursAller[j];
-				parcoursAller[j]=parcoursAller[parcoursAller.length-1-j];
-				parcoursAller[parcoursAller.length-1-j]=temp;
-				temp=parcoursRetour[j];
-				parcoursRetour[j]=parcoursRetour[parcoursRetour.length-1-j];
-				parcoursRetour[parcoursRetour.length-1-j]=temp;
+			int temp1,temp2;
+			temp1=parcoursAller[1];
+			parcoursAller[1]=parcoursAller[0];
+			for(int j=1;j<parcoursAller.length-1;j++){
+				temp2=parcoursAller[j+1];
+				parcoursAller[j+1]=temp1;
+				temp1=temp2;
 			}
+			parcoursAller[0]=temp1;
 			k++;
 		}
 	}
