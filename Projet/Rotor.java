@@ -1,5 +1,7 @@
+import java.util.Observable;
 
-public class Rotor {
+
+public class Rotor extends Observable {
 	private int[] parcoursAller;
 	private int[] parcoursRetour;
 	private int position;
@@ -29,6 +31,8 @@ public class Rotor {
 	}
 	public void setPosition(int i){
 		this.position=i;
+		setChanged();
+		notifyObservers();
 	}
 	public void avancer(int i){
 		int k=0;

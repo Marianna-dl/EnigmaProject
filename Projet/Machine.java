@@ -1,10 +1,12 @@
+import java.util.Observable;
 
-public class Machine {
+
+public class Machine extends Observable {
 
 	private Plugboard plugboard;
 	private Rotor[] tabRotor;
 	private Reflecteur reflecteur;
-	private static final char[] CONVERT = {(char)0,'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',' ','.','!','?',',',':','(',')','\'','"'};
+	static final char[] CONVERT = {(char)0,'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',' ','.','!','?',',',':','(',')','\'','"'};
 	
 	public Machine (Rotor[] tabR, Reflecteur ref, Plugboard plug){
 		this.plugboard=plug;
@@ -30,6 +32,7 @@ public class Machine {
 		for (Rotor r : tabRotor){
 			nbInter=r.getCorrespondance(nbInter, false);
 		}
+
 		return CONVERT[plugboard.getLetter(nbInter)];
 	}
 	public String crypter (String s){
@@ -45,4 +48,9 @@ public class Machine {
 	public Rotor getRotor(int i){
 		return tabRotor[i];
 	}
+	
+	public char[] getConvert(){
+		return CONVERT;
+	}
+	
 }

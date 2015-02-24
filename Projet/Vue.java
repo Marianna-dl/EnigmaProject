@@ -99,6 +99,18 @@ public class Vue extends JFrame implements Observer{
     public JTextField getPosRotor3(){
         return this.posRotor3;
     }
+    public JLabel getRotorInitial3(){
+        return this.rotor3;
+    }
+    public JLabel getRotorInitial1(){
+        return this.rotor1;
+    }
+    public JLabel getRotorInitial2(){
+        return this.rotor2;
+    }
+    public boolean getStateCheckbox(){
+        return this.box.getState();
+    }
     
     public void initialise()	{
         this.c=this.getContentPane();    
@@ -166,9 +178,9 @@ public class Vue extends JFrame implements Observer{
         this.posRotor1=new JTextField(2);
         this.posRotor2=new JTextField(2);
         this.posRotor3=new JTextField(2);
-        this.rotor1=new JLabel("");
-        this.rotor2=new JLabel("");
-        this.rotor3=new JLabel("");
+        this.rotor1=new JLabel("1");
+        this.rotor2=new JLabel("1");
+        this.rotor3=new JLabel("1");
         this.positionActuelle=new JLabel("Positions Actuelle des Rotors");
         this.posAcRotor1=new JLabel("");
         this.posAcRotor2=new JLabel("");
@@ -176,6 +188,7 @@ public class Vue extends JFrame implements Observer{
         this.appliquer=new JButton("appliquer");     
         this.panelAffichage=new JPanel(new GridLayout(6,1,4,2));
         this.panelAffichage.setBounds(30,5,350,775);
+        
         JPanel pRot = new JPanel(new GridLayout(1,3,4,2));
         Border bordTemps=BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Configurations Rotors Initiale"),BorderFactory.createEmptyBorder(20,10,3,2));
         pRot.setBorder(bordTemps);
@@ -186,7 +199,8 @@ public class Vue extends JFrame implements Observer{
         this.rotor2.setBorder(bordSS);
         this.rotor3.setBorder(bordCC);
         
-        pRot.add(this.rotor1);pRot.add(this.rotor2);
+        pRot.add(this.rotor1);
+        pRot.add(this.rotor2);
         pRot.add(this.rotor3);
         this.panelAffichage.add(pRot);
 
@@ -227,14 +241,14 @@ public class Vue extends JFrame implements Observer{
     public void centreEcran(int w, int h){
         this.setBounds((w/2)/2,(h/2)/2, w/2, h/2);
         this.setSize(w,h);
+    	
+    	/*this.setSize(h,w/2);    
+    	this.setLocationRelativeTo(null) ;*/
     }
     public void update(Observable o,Object ob){
-        this.rotor1.setText(String.valueOf(this.model.getPosRotor(0)));
-        this.rotor2.setText(String.valueOf(this.model.getPosRotor(1)));
-        this.rotor3.setText(String.valueOf(this.model.getPosRotor(2)));
-        this.posAcRotor1.setText(String.valueOf(this.model.getPosRotor(0)));
-        this.posAcRotor2.setText(String.valueOf(this.model.getPosRotor(1)));
-        this.posAcRotor3.setText(String.valueOf(this.model.getPosRotor(2)));
+        this.posAcRotor1.setText(String.valueOf(this.model.getRotor(0).getPosition()));
+        this.posAcRotor2.setText(String.valueOf(this.model.getRotor(1).getPosition()));
+        this.posAcRotor3.setText(String.valueOf(this.model.getRotor(2).getPosition()));
         this.repaint();
         
     }
