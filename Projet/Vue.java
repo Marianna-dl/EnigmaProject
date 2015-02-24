@@ -53,20 +53,11 @@ public class Vue extends JFrame implements Observer{
         this.box=new Checkbox("Parametres inconnus",false);
         
         //on initialise le tableau de label du clavier revelateur
-        this.cases = new JLabel[41];   
-        for(int i=0; i<26;i++){
-        	this.cases[i]=new JLabel(""+(char)(65+i));
-        }
-       int j=0;
-       for(int i=26; i<26+10;i++){
-        	this.cases[i]=new JLabel(""+(char)(48+j));
-    	  j++;
+        this.cases = new JLabel[this.model.CONVERT.length];   
+       for(int i=1; i<this.model.CONVERT.length;i++){
+        	this.cases[i]=new JLabel((" "+this.model.CONVERT[i]+" ").toUpperCase());
         }      
-        this.cases[36]=new JLabel("Espace");
-        this.cases[37]=new JLabel(".");
-        this.cases[38]=new JLabel(",");
-        this.cases[39]=new JLabel("?");
-        this.cases[40]=new JLabel("!");
+
         
         /*code pour changer de couleur, ici il s'agit de la lettre A
          cases[0].setOpaque(true);
@@ -77,7 +68,9 @@ public class Vue extends JFrame implements Observer{
         this.show();    
     }
     
-
+    public JLabel[] getCases(){
+    	return this.cases;
+    }
     public JTextArea getTextClear(){
         return this.textClair;
     }
@@ -158,13 +151,13 @@ public class Vue extends JFrame implements Observer{
         JPanel j2=new JPanel(new GridLayout(3,4,5,3));
         JPanel j3=new JPanel(new GridLayout(1,1,5,3));
 
-        for(int i=0; i<26;i++){
-        	 j1.add(cases[i]);
+        for(int i=1; i<11;i++){
+        	 j2.add(cases[i]);
         }
-        for(int i=26;i<26+10;i++){
-        	j2.add(cases[i]);
+        for(int i=11;i<37;i++){
+        	j1.add(cases[i]);
         }
-        for(int i=36;i<this.cases.length;i++){
+        for(int i=37;i<this.cases.length;i++){
         	j3.add(cases[i]);
         }     
         j.add(j1);

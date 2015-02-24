@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -102,18 +103,25 @@ public class Controleur implements ActionListener, KeyListener{
 	 * Event declenche apres un avoir relache une touche du clavier
 	 */
 	public void keyReleased(KeyEvent e) {
+		for(int i=1;i<this.vue.getCases().length;i++){
+			this.vue.getCases()[i].setOpaque(false);
+			this.vue.getCases()[i].repaint();
+		}
 		if(e.getSource()==this.vue.getTextClear()){// Si le texte tape est un texte en clair, on le crypte
 			char chaine=Character.toLowerCase(e.getKeyChar());
-			boolean trouve=false;
+			int trouve=-1;
 			for(int i=0;i<this.modele.CONVERT.length;i++){ //on Regarde si la lettre est bien une lettre qu'on peut crypter
 				if(this.modele.CONVERT[i]==chaine){
-					trouve=true;
+					trouve=i;
 					break;
 				}
 			}
-			if(!(e.getKeyCode()==KeyEvent.VK_BACK_SPACE) && trouve){
+			if(!(e.getKeyCode()==KeyEvent.VK_BACK_SPACE) && trouve>=0){
 				char lettreCryptee=this.modele.crypter(chaine);
 				this.vue.getTextCrypt().setText(this.vue.getTextCrypt().getText()+lettreCryptee);
+				this.vue.getCases()[trouve].setOpaque(true);
+				this.vue.getCases()[trouve].setBackground(Color.YELLOW);
+
 			}
 			else if(e.getKeyCode()==KeyEvent.VK_BACK_SPACE){
 				String ch;
@@ -134,7 +142,6 @@ public class Controleur implements ActionListener, KeyListener{
 			}
 			/*if(e.getKeyChar()!=' ' && !(e.getKeyCode()==KeyEvent.VK_BACK_SPACE)){
 				this.vue.getTextCrypt().setText(this.vue.getTextCrypt().getText()+e.getKeyChar());
-				System.out.println("yop");
 			}*/
 		}
 		
