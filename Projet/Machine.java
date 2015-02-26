@@ -31,6 +31,7 @@ public class Machine extends Observable {
 		nbInter=reflecteur.getCorrespondance(nbInter);
 		for (Rotor r : tabRotor){
 			nbInter=r.getCorrespondance(nbInter, false);
+			r.avancer(1);
 		}
 
 		return CONVERT[plugboard.getLetter(nbInter)];
