@@ -8,7 +8,7 @@ public class Rotor extends Observable {
 	
 	public Rotor(int[] tab,int pos){
 		this.parcoursAller=tab;
-		this.parcoursRetour= new int[47];
+		this.parcoursRetour= new int[46];
 		this.createMirror();
 		this.avancer(pos);
 		this.position=pos;
