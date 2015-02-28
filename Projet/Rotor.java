@@ -30,7 +30,7 @@ public class Rotor extends Observable {
 		return position;
 	}
 	public void setPosition(int i){
-		this.position=i;
+		this.position=i%46;
 		setChanged();
 		notifyObservers();
 	}
@@ -47,6 +47,8 @@ public class Rotor extends Observable {
 			}
 			parcoursAller[0]=temp1;
 			k++;
+			this.setPosition(this.getPosition()+1);
 		}
+		this.createMirror();
 	}
 }
