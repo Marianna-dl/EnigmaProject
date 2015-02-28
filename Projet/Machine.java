@@ -33,15 +33,10 @@ public class Machine extends Observable {
 			nbInter=r.getCorrespondance(nbInter, false);
 		}
 		tabRotor[0].avancer(1);
-		if(tabRotor[0].getPosition()==47){
-			tabRotor[0].setPosition(0);
+		if(tabRotor[0].getPosition()==0){
 			tabRotor[1].avancer(1);
-			if(tabRotor[1].getPosition()==47){
-				tabRotor[1].setPosition(0);
+			if(tabRotor[1].getPosition()==0){
 				tabRotor[2].avancer(1);
-				if(tabRotor[2].getPosition()==47){
-					tabRotor[2].setPosition(0);
-				}
 			}
 		}
 		return CONVERT[plugboard.getLetter(nbInter)];
