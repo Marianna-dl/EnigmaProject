@@ -109,18 +109,24 @@ public class Controleur implements ActionListener, KeyListener{
 		}
 		if(e.getSource()==this.vue.getTextClear()){// Si le texte tape est un texte en clair, on le crypte
 			char chaine=Character.toLowerCase(e.getKeyChar());
-			int trouve=-1;
+			boolean trouve=false;
 			for(int i=0;i<this.modele.CONVERT.length;i++){ //on Regarde si la lettre est bien une lettre qu'on peut crypter
-				if(this.modele.CONVERT[i]==chaine){
-					trouve=i;
+				if(this.modele.CONVERT[i]==chaine){	
+					trouve=true;
 					break;
 				}
 			}
-			if(!(e.getKeyCode()==KeyEvent.VK_BACK_SPACE) && trouve>=0){
+			if(!(e.getKeyCode()==KeyEvent.VK_BACK_SPACE) && trouve){
 				char lettreCryptee=this.modele.crypter(chaine);
 				this.vue.getTextCrypt().setText(this.vue.getTextCrypt().getText()+lettreCryptee);
-				this.vue.getCases()[trouve].setOpaque(true);
-				this.vue.getCases()[trouve].setBackground(Color.YELLOW);
+				for(int i=1; i<this.modele.CONVERT.length;i++){
+					if(this.modele.CONVERT[i]==lettreCryptee){
+						this.vue.getCases()[i].setOpaque(true);
+						this.vue.getCases()[i].setBackground(Color.YELLOW);
+						break;
+						
+					}
+				}
 
 			}
 			else if(e.getKeyCode()==KeyEvent.VK_BACK_SPACE){
