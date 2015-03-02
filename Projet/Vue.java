@@ -49,12 +49,12 @@ public class Vue extends JFrame implements Observer{
             this.model.getRotor(i).addObserver(this);
         }
         this.model.getPlugboard().addObserver(this);
-        //on initialise le checkbox pour différencier les cryptages avec parametres connus ou inconnus
+        //on initialise le checkbox pour diff≈Ωrencier les cryptages avec parametres connus ou inconnus
         this.box=new Checkbox("Parametres inconnus",false);
         
         //on initialise le tableau de label du clavier revelateur
         this.cases = new JLabel[this.model.CONVERT.length];
-        for(int i=1; i<this.model.CONVERT.length;i++){
+        for(int i=0; i<this.model.CONVERT.length;i++){
             this.cases[i]=new JLabel((" "+this.model.CONVERT[i]+" ").toUpperCase());
         }
         
@@ -152,17 +152,17 @@ public class Vue extends JFrame implements Observer{
         JPanel j2=new JPanel(new GridLayout(3,4,5,3));
         JPanel j3=new JPanel(new GridLayout(1,1,5,3));
         
-        //boucle qui permet d'ajouter au panel j2 les valeur du tableau alant de la case 1 à 10
+        //boucle qui permet d'ajouter au panel j2 les valeur du tableau alant de la case 1 ÀÜ 10
         
-        for(int i=1; i<11;i++){
+        for(int i=0; i<10;i++){
             j2.add(cases[i]);
         }
-        //boucle qui permet d'ajouter au panel j1 les valeur du tableau alant de la case 11 à 36
-        for(int i=11;i<37;i++){
+        //boucle qui permet d'ajouter au panel j1 les valeur du tableau alant de la case 11 ÀÜ 36
+        for(int i=10;i<37;i++){
             j1.add(cases[i]);
         }
         
-        //boucle qui permet d'ajouter au panel j3 les valeur du tableau alant de la case 37 à la fin du tableau
+        //boucle qui permet d'ajouter au panel j3 les valeur du tableau alant de la case 37 ÀÜ la fin du tableau
         for(int i=37;i<this.cases.length;i++){
             j3.add(cases[i]);
         }
@@ -188,7 +188,7 @@ public class Vue extends JFrame implements Observer{
         this.panelAffichage=new JPanel(new GridLayout(6,1,4,2));
         this.panelAffichage.setBounds(30,5,350,775);
         
-        //sous panel qui gère la position initiale des rotors
+        //sous panel qui gÔøΩre la position initiale des rotors
         JPanel pRot = new JPanel(new GridLayout(1,3,4,2));
         Border bordTemps=BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Configurations Rotors Initiale"),BorderFactory.createEmptyBorder(20,10,3,2));
         pRot.setBorder(bordTemps);
@@ -204,7 +204,7 @@ public class Vue extends JFrame implements Observer{
         pRot.add(this.rotor3);
         this.panelAffichage.add(pRot);
         
-        //sous panel qui gère la position actuelle des rotors
+        //sous panel qui gÔøΩre la position actuelle des rotors
         JPanel pRot1 = new JPanel(new GridLayout(1,3,4,2));
         Border bordTemps1=BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Positions Actuelle"),BorderFactory.createEmptyBorder(20,10,3,2));
         pRot1.setBorder(bordTemps1);
@@ -240,7 +240,7 @@ public class Vue extends JFrame implements Observer{
         return (this.panelAffichage);
         
     }
-    //fonction permettant de gèrer l'affichage de l'écran
+    //fonction permettant de gÔøΩrer l'affichage de l'≈Ωcran
     public void centreEcran(int w, int h){
         this.setBounds((w/2)/2,(h/2)/2, w/2, h/2);
         this.setSize(w,h);
@@ -249,7 +249,7 @@ public class Vue extends JFrame implements Observer{
          this.setLocationRelativeTo(null) ;*/
     }
     
-    //permet d'actualiser la vue en fonction des changement d'état des objets observés
+    //permet d'actualiser la vue en fonction des changement d'≈Ωtat des objets observ≈Ωs
     public void update(Observable o,Object ob){
         this.posAcRotor1.setText(String.valueOf(this.model.getRotor(0).getPosition()));
         this.posAcRotor2.setText(String.valueOf(this.model.getRotor(1).getPosition()));

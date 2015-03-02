@@ -103,7 +103,7 @@ public class Controleur implements ActionListener, KeyListener{
 	 * Event declenche apres un avoir relache une touche du clavier
 	 */
 	public void keyReleased(KeyEvent e) {
-		for(int i=1;i<this.vue.getCases().length;i++){
+		for(int i=0;i<this.vue.getCases().length;i++){
 			this.vue.getCases()[i].setOpaque(false);
 			this.vue.getCases()[i].repaint();
 		}
@@ -119,7 +119,7 @@ public class Controleur implements ActionListener, KeyListener{
 			if(!(e.getKeyCode()==KeyEvent.VK_BACK_SPACE) && trouve){
 				char lettreCryptee=this.modele.crypter(chaine);
 				this.vue.getTextCrypt().setText(this.vue.getTextCrypt().getText()+lettreCryptee);
-				for(int i=1; i<this.modele.CONVERT.length;i++){
+				for(int i=0; i<this.modele.CONVERT.length;i++){
 					if(this.modele.CONVERT[i]==lettreCryptee){
 						this.vue.getCases()[i].setOpaque(true);
 						this.vue.getCases()[i].setBackground(Color.YELLOW);
