@@ -15,6 +15,7 @@ public class Vue extends JFrame implements Observer{
     private Container c;
     private JButton decrypter ;
     private JButton appliquer ;
+    private JButton crypter;
     private JTextArea textClair;
     private JTextArea textCrypte;
     private JTextField posRotor1;
@@ -80,6 +81,9 @@ public class Vue extends JFrame implements Observer{
     public JButton getBoutonDecrypte(){
         return this.decrypter;
     }
+    public JButton getBoutonCrypte(){
+        return this.crypter;
+    }
     public JButton getBoutonAppliquer(){
         return this.appliquer;
     }
@@ -119,18 +123,26 @@ public class Vue extends JFrame implements Observer{
         this.crypteLabel=new JLabel("Texte crypte");
         this.textClair=new JTextArea(10,30);
         this.textCrypte=new JTextArea(10,30);
+        textClair.setWrapStyleWord(true);
+
         this.decrypter=new JButton("decrypter");
+        this.crypter=new JButton("crypter");
         this.panelAffichage2=new JPanel(new GridLayout(3,1,4,2));
         this.panelAffichage2.setBounds(380, 380, 990, 400);
         JPanel ptext = new JPanel(new GridLayout(1,1,5,2));
         ptext.add(this.crypteLabel);ptext.add(this.clairLabel);
         this.panelAffichage2.add(ptext);
+
         JPanel ptext1 = new JPanel(new GridLayout(1,1,5,2));
         ptext1.add(this.textCrypte);ptext1.add(this.textClair);
+     //   textClair.setEditable(true);
+       // textCrypte.setEditable(true);
+
         this.panelAffichage2.add(ptext1);
         JPanel ptext2 = new JPanel();
-        ptext2.add(this.box);
-        ptext2.add(this.decrypter);
+        ptext2.add(this.box, BorderLayout.WEST);
+        ptext2.add(this.decrypter, BorderLayout.CENTER);
+        ptext2.add(this.crypter,BorderLayout.EAST);
         panelAffichage2.add(ptext2);
         Border bord1=BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Commandes"),
                                                         BorderFactory.createEmptyBorder(20,10,3,2));

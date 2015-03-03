@@ -28,6 +28,7 @@ public class Controleur implements ActionListener, KeyListener{
 		this.vue.getTextClear().addKeyListener(this);
 		this.vue.getTextCrypt().addKeyListener(this);
 		this.vue.getBoutonDecrypte().addActionListener(this);
+		this.vue.getBoutonCrypte().addActionListener(this);
 		this.vue.getBoutonAppliquer().addActionListener(this);
 		
 	}
@@ -51,12 +52,29 @@ public class Controleur implements ActionListener, KeyListener{
 				this.modele.getRotor(0).avancer(this.modele.CONVERT.length-(this.modele.getRotor(0).getPosition()-posrotor1));
 				this.modele.getRotor(1).avancer(this.modele.CONVERT.length-(this.modele.getRotor(1).getPosition()-posrotor2));
 				this.modele.getRotor(2).avancer(this.modele.CONVERT.length-(this.modele.getRotor(2).getPosition()-posrotor3));
-				System.out.println("Position rotor 1 : "+modele.getRotor(0).getPosition());
-				System.out.println("Position rotor 2 : "+modele.getRotor(1).getPosition());
-				System.out.println("Position rotor 3 : "+modele.getRotor(2).getPosition());
 				String chDecryptee=this.modele.crypter(this.vue.getTextCrypt().getText());
 				this.vue.getTextClear().setText(chDecryptee);
 			}
+		}
+		else if(e.getSource()==this.vue.getBoutonCrypte()){
+			String chaine=this.vue.getTextClear().getText().replaceAll("[\r\n]+", "").toLowerCase();
+			int occurences=0;
+			for(int j=0; j<chaine.length();j++){
+				for(int i=0;i<this.modele.CONVERT.length;i++){ //on Regarde si la lettre est bien une lettre qu'on peut crypter
+					if(this.modele.CONVERT[i]==chaine.charAt(j)){	
+						occurences++;
+					}
+				}
+			}
+		//	System.out.println(occurences);
+			//System.out.println(chaine.length());
+			if(occurences==chaine.length()){
+				String cryptee=this.modele.crypter(this.vue.getTextClear().getText());
+				this.vue.getTextCrypt().setText(cryptee);
+			}
+			
+			
+			
 		}
 		//Si c'est le bouton appliquer qui est clique, on change les parametres d'Enigma (positions rotors)
 		else if(e.getSource()==this.vue.getBoutonAppliquer()){
@@ -70,15 +88,15 @@ public class Controleur implements ActionListener, KeyListener{
 			} catch(NumberFormatException nfe) {
 			     System.out.println("Les positions doivent etre des entiers");
 			}
-			if(r1>=0 && r1<=26){
+			if(r1>=0 && r1<this.modele.CONVERT.length){
 				this.modele.getRotor(0).avancer(46-(this.modele.getRotor(0).getPosition()-r1));
 				this.vue.getRotorInitial1().setText(""+r1);
 			}
-			if(r2>=0 && r2<=26){
+			if(r2>=0 && r2<this.modele.CONVERT.length){
 				this.modele.getRotor(1).avancer(46-(this.modele.getRotor(1).getPosition()-r2));
 				this.vue.getRotorInitial2().setText(""+r2);
 			}
-			if(r3>=0 && r3<=26){
+			if(r3>=0 && r3<this.modele.CONVERT.length){
 				this.modele.getRotor(2).avancer(46-(this.modele.getRotor(2).getPosition()-r3));
 				this.vue.getRotorInitial3().setText(""+r3);
 			}
