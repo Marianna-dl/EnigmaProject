@@ -48,19 +48,21 @@ public class Controleur implements ActionListener, KeyListener{
 				int posrotor1=Integer.parseInt(this.vue.getRotorInitial1().getText());
 				int posrotor2=Integer.parseInt(this.vue.getRotorInitial2().getText());
 				int posrotor3=Integer.parseInt(this.vue.getRotorInitial3().getText());
-				this.modele.getRotor(0).setPosition(posrotor1);
-				this.modele.getRotor(1).setPosition(posrotor2);
-				this.modele.getRotor(2).setPosition(posrotor3);
-				
+				this.modele.getRotor(0).avancer(this.modele.CONVERT.length-(this.modele.getRotor(0).getPosition()-posrotor1));
+				this.modele.getRotor(1).avancer(this.modele.CONVERT.length-(this.modele.getRotor(1).getPosition()-posrotor2));
+				this.modele.getRotor(2).avancer(this.modele.CONVERT.length-(this.modele.getRotor(2).getPosition()-posrotor3));
+				System.out.println("Position rotor 1 : "+modele.getRotor(0).getPosition());
+				System.out.println("Position rotor 2 : "+modele.getRotor(1).getPosition());
+				System.out.println("Position rotor 3 : "+modele.getRotor(2).getPosition());
 				String chDecryptee=this.modele.crypter(this.vue.getTextCrypt().getText());
 				this.vue.getTextClear().setText(chDecryptee);
 			}
 		}
 		//Si c'est le bouton appliquer qui est clique, on change les parametres d'Enigma (positions rotors)
 		else if(e.getSource()==this.vue.getBoutonAppliquer()){
-			int r1=0;
-			int r2=0;
-			int r3=0;
+			int r1=-1;
+			int r2=-1;
+			int r3=-1;
 			try {
 			    r1=Integer.parseInt(this.vue.getPosRotor1().getText());
 			    r2=Integer.parseInt(this.vue.getPosRotor2().getText());
@@ -68,20 +70,17 @@ public class Controleur implements ActionListener, KeyListener{
 			} catch(NumberFormatException nfe) {
 			     System.out.println("Les positions doivent etre des entiers");
 			}
-			if(r1>=1 && r1<=26){
-				this.modele.getRotor(0).setPosition(r1);
+			if(r1>=0 && r1<=26){
+				this.modele.getRotor(0).avancer(46-(this.modele.getRotor(0).getPosition()-r1));
 				this.vue.getRotorInitial1().setText(""+r1);
-				//System.out.println(r1);
 			}
-			if(r2>=1 && r2<=26){
-				this.modele.getRotor(1).setPosition(r2);
+			if(r2>=0 && r2<=26){
+				this.modele.getRotor(1).avancer(46-(this.modele.getRotor(1).getPosition()-r2));
 				this.vue.getRotorInitial2().setText(""+r2);
-				//System.out.println(r2);
 			}
-			if(r3>=1 && r3<=26){
-				this.modele.getRotor(2).setPosition(r3);
+			if(r3>=0 && r3<=26){
+				this.modele.getRotor(2).avancer(46-(this.modele.getRotor(2).getPosition()-r3));
 				this.vue.getRotorInitial3().setText(""+r3);
-				//System.out.println(r3);
 			}
 		}
 		
