@@ -37,6 +37,8 @@ public class Vue extends JFrame implements Observer{
     private JLabel posAcRotor2;
     private JLabel posAcRotor3;
     private Machine model;
+    private JScrollPane scrollClair;
+    private JScrollPane scrollCrypte;
     Checkbox box;
     //on pose le tableau de labels qui va nous permetre de colorer la lettre cryptee
     private JLabel cases[];
@@ -124,7 +126,11 @@ public class Vue extends JFrame implements Observer{
         this.textClair=new JTextArea(10,30);
         this.textCrypte=new JTextArea(10,30);
         textClair.setWrapStyleWord(true);
-
+        textCrypte.setWrapStyleWord(true);
+        textClair.setLineWrap(true);
+        textCrypte.setLineWrap(true);
+        this.scrollCrypte= new JScrollPane(textCrypte,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        this.scrollClair= new JScrollPane(textClair,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         this.decrypter=new JButton("decrypter");
         this.crypter=new JButton("crypter");
         this.panelAffichage2=new JPanel(new GridLayout(3,1,4,2));
@@ -134,10 +140,11 @@ public class Vue extends JFrame implements Observer{
         this.panelAffichage2.add(ptext);
 
         JPanel ptext1 = new JPanel(new GridLayout(1,1,5,2));
-        ptext1.add(this.textCrypte);ptext1.add(this.textClair);
-     //   textClair.setEditable(true);
-       // textCrypte.setEditable(true);
-
+       // ptext1.add(this.textCrypte);ptext1.add(this.textClair);
+        textClair.setEditable(true);
+        textCrypte.setEditable(true);
+        ptext1.add(this.scrollCrypte);
+        ptext1.add(this.scrollClair);
         this.panelAffichage2.add(ptext1);
         JPanel ptext2 = new JPanel();
         ptext2.add(this.box, BorderLayout.WEST);
