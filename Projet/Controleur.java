@@ -46,35 +46,17 @@ public class Controleur implements ActionListener, KeyListener{
 				this.vue.getTextClear().setText("decrypte sans parametres");
 			}
 			else{ // Si ils sont connus, on remet les rotors dans leur position initiale et on decrypte
-				int posrotor1=Integer.parseInt(this.vue.getRotorInitial1().getText());
-				int posrotor2=Integer.parseInt(this.vue.getRotorInitial2().getText());
-				int posrotor3=Integer.parseInt(this.vue.getRotorInitial3().getText());
-				this.modele.getRotor(0).avancer(this.modele.CONVERT.length-(this.modele.getRotor(0).getPosition()-posrotor1));
-				this.modele.getRotor(1).avancer(this.modele.CONVERT.length-(this.modele.getRotor(1).getPosition()-posrotor2));
-				this.modele.getRotor(2).avancer(this.modele.CONVERT.length-(this.modele.getRotor(2).getPosition()-posrotor3));
+				rotorInitial();
 				String chDecryptee=this.modele.crypter(this.vue.getTextCrypt().getText());
 				this.vue.getTextClear().setText(chDecryptee);
 			}
 		}
 		else if(e.getSource()==this.vue.getBoutonCrypte()){
 			String chaine=this.vue.getTextClear().getText().replaceAll("[\r\n]+", "").toLowerCase();
-			int occurences=0;
-			for(int j=0; j<chaine.length();j++){
-				for(int i=0;i<this.modele.CONVERT.length;i++){ //on Regarde si la lettre est bien une lettre qu'on peut crypter
-					if(this.modele.CONVERT[i]==chaine.charAt(j)){	
-						occurences++;
-					}
-				}
-			}
-		//	System.out.println(occurences);
-			//System.out.println(chaine.length());
-			if(occurences==chaine.length()){
+			if(lettreExiste(chaine)){
 				String cryptee=this.modele.crypter(this.vue.getTextClear().getText());
 				this.vue.getTextCrypt().setText(cryptee);
 			}
-			
-			
-			
 		}
 		//Si c'est le bouton appliquer qui est clique, on change les parametres d'Enigma (positions rotors)
 		else if(e.getSource()==this.vue.getBoutonAppliquer()){
@@ -103,6 +85,153 @@ public class Controleur implements ActionListener, KeyListener{
 		}
 		
 	}
+
+	@Override
+	/**
+	 * Event declenche apres un avoir relache une touche du clavier
+	 */
+	public void keyReleased(KeyEvent e) {
+		resetColor();
+		if(e.getSource()==this.vue.getTextClear()){// Si le texte tape est un texte en clair, on le crypte
+			char chaine=Character.toLowerCase(e.getKeyChar());
+			if(!(e.getKeyCode()==KeyEvent.VK_BACK_SPACE) && lettreExiste(chaine)){
+				char lettreCryptee=this.modele.crypter(chaine);
+				this.vue.getTextCrypt().setText(this.vue.getTextCrypt().getText()+lettreCryptee);
+				allumeLettre(lettreCryptee);
+			}
+			else if(!this.vue.getTextClear().getText().equals("") &&e.getKeyCode()==KeyEvent.VK_BACK_SPACE){
+				String ch;
+				if(this.vue.getTextClear().getText().length()!=0){
+					ch=this.vue.getTextCrypt().getText().substring(0, this.vue.getTextCrypt().getText().length()-1);
+					this.vue.getTextCrypt().setText(ch);
+				}
+				else{
+					 ch=this.vue.getTextCrypt().getText().substring(0, 0);	
+					 this.vue.getTextCrypt().setText(ch);
+				}
+				reculerRotor();	
+			}
+			
+			if(this.vue.getTextClear().getText().equals("")){
+				rotorInitial();
+				this.vue.getTextCrypt().setText("");
+			}
+		}
+		if(e.getSource()==this.vue.getTextCrypt()){ 
+			char chaine=Character.toLowerCase(e.getKeyChar());
+			if(!(e.getKeyCode()==KeyEvent.VK_BACK_SPACE) && lettreExiste(chaine)){
+				char lettreCryptee=this.modele.crypter(chaine);
+				this.vue.getTextClear().setText(this.vue.getTextClear().getText()+lettreCryptee);
+				allumeLettre(lettreCryptee); // On colorie en jaune la lettre sortante sur le clavier revelateur
+			}
+			else if(!this.vue.getTextCrypt().getText().equals("") && e.getKeyCode()==KeyEvent.VK_BACK_SPACE){
+				System.out.println(this.vue.getTextCrypt().getText().length());
+				String ch;
+				if(this.vue.getTextCrypt().getText().length()!=0){
+					ch=this.vue.getTextClear().getText().substring(0, this.vue.getTextClear().getText().length()-1);
+					this.vue.getTextClear().setText(ch);
+				}
+				else{
+					 ch=this.vue.getTextClear().getText().substring(0, 0);	
+					 this.vue.getTextClear().setText(ch);
+				}
+				reculerRotor();
+			}
+			if(this.vue.getTextCrypt().getText().equals("")){
+				rotorInitial();
+				this.vue.getTextClear().setText("");
+			}
+		}
+		
+	}
+	/**
+	 * Enleve les couleurs du clavier revelateur
+	 */	
+	public void resetColor(){
+		for(int i=0;i<this.vue.getCases().length;i++){
+			this.vue.getCases()[i].setOpaque(false);
+			this.vue.getCases()[i].repaint();
+		}
+	}
+	
+	/**
+	 * Verifie qu'une lettre est cryptable
+	 * @param c
+	 * 			Le char qu'on veut verifier
+	 * @return true si la lettre est bien dans le tableau des lettres cryptables, false sinon
+	 */	
+	public boolean lettreExiste(char c){
+		for(int i=0;i<this.modele.CONVERT.length;i++){ //on Regarde si la lettre est bien une lettre qu'on peut crypter
+			if(this.modele.CONVERT[i]==c){	
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Verifie que toutes les lettres de la chaine sont cryptables
+	 * @param s
+	 * 			La chaine qu'on veut verifier
+	 * @return true si toutes les lettres de la chaine sont bien dans le tableau des lettres cryptables, false sinon
+	 */	
+	public boolean lettreExiste(String s){
+		int occurences=0;
+		for(int j=0; j<s.length();j++){
+			for(int i=0;i<this.modele.CONVERT.length;i++){ 
+				if(this.modele.CONVERT[i]==s.charAt(j)){	
+					occurences++;
+				}
+			}
+			if(occurences==s.length()){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Remet les rotors dans leur position initiale
+	 */	
+	public void rotorInitial(){
+		int posrotor1=Integer.parseInt(this.vue.getRotorInitial1().getText());
+		int posrotor2=Integer.parseInt(this.vue.getRotorInitial2().getText());
+		int posrotor3=Integer.parseInt(this.vue.getRotorInitial3().getText());
+		this.modele.getRotor(0).avancer(this.modele.CONVERT.length-(this.modele.getRotor(0).getPosition()-posrotor1));
+		this.modele.getRotor(1).avancer(this.modele.CONVERT.length-(this.modele.getRotor(1).getPosition()-posrotor2));
+		this.modele.getRotor(2).avancer(this.modele.CONVERT.length-(this.modele.getRotor(2).getPosition()-posrotor3));	
+	}
+	
+	/**
+	 * Permet de reculer un rotor d'un cran
+	 */	
+	public void reculerRotor(){
+		this.modele.getRotor(0).avancer(this.modele.CONVERT.length-1);
+		if(this.modele.getRotor(0).getPosition()==45){
+			System.out.println("allo");
+			this.modele.getRotor(1).avancer(this.modele.CONVERT.length-1);
+			if(this.modele.getRotor(1).getPosition()==45){
+				this.modele.getRotor(2).avancer(this.modele.CONVERT.length-1);
+			}
+		}
+
+	}
+	
+	/**
+	 * Met en couleur la lettre sortante du clavier revelateur
+	 * 
+	 * @param lettre
+	 * 			La lettre que l'on veut mettre en couleur
+	 */	
+	public void allumeLettre(char lettre){
+		for(int i=0; i<this.modele.CONVERT.length;i++){
+			if(this.modele.CONVERT[i]==lettre){
+				this.vue.getCases()[i].setOpaque(true);
+				this.vue.getCases()[i].setBackground(Color.YELLOW);
+				break;
+			}
+		}
+	}
 	@Override
 	public void keyTyped(KeyEvent e) {
 
@@ -115,60 +244,5 @@ public class Controleur implements ActionListener, KeyListener{
 		
 	}
 
-	@Override
-	/**
-	 * Event declenche apres un avoir relache une touche du clavier
-	 */
-	public void keyReleased(KeyEvent e) {
-		for(int i=0;i<this.vue.getCases().length;i++){
-			this.vue.getCases()[i].setOpaque(false);
-			this.vue.getCases()[i].repaint();
-		}
-		if(e.getSource()==this.vue.getTextClear()){// Si le texte tape est un texte en clair, on le crypte
-			char chaine=Character.toLowerCase(e.getKeyChar());
-			boolean trouve=false;
-			for(int i=0;i<this.modele.CONVERT.length;i++){ //on Regarde si la lettre est bien une lettre qu'on peut crypter
-				if(this.modele.CONVERT[i]==chaine){	
-					trouve=true;
-					break;
-				}
-			}
-			if(!(e.getKeyCode()==KeyEvent.VK_BACK_SPACE) && trouve){
-				char lettreCryptee=this.modele.crypter(chaine);
-				this.vue.getTextCrypt().setText(this.vue.getTextCrypt().getText()+lettreCryptee);
-				for(int i=0; i<this.modele.CONVERT.length;i++){
-					if(this.modele.CONVERT[i]==lettreCryptee){
-						this.vue.getCases()[i].setOpaque(true);
-						this.vue.getCases()[i].setBackground(Color.YELLOW);
-						break;
-						
-					}
-				}
-
-			}
-			else if(e.getKeyCode()==KeyEvent.VK_BACK_SPACE){
-				String ch;
-				if(this.vue.getTextClear().getText().length()!=0){
-					ch=this.vue.getTextCrypt().getText().substring(0, this.vue.getTextCrypt().getText().length()-1);
-					this.vue.getTextCrypt().setText(ch);
-				}
-				else{
-					 ch=this.vue.getTextCrypt().getText().substring(0, 0);	
-					 this.vue.getTextCrypt().setText(ch);
-				}
-			}
-		}
-		if(e.getSource()==this.vue.getTextCrypt()){ // Si c'est un texte crypte, on vide le textarea clair
-			if(this.vue.getTextClear().getText().length()>0){
-				this.vue.getTextClear().setText("");
-				this.vue.getTextCrypt().setText(""+e.getKeyChar());
-			}
-			/*if(e.getKeyChar()!=' ' && !(e.getKeyCode()==KeyEvent.VK_BACK_SPACE)){
-				this.vue.getTextCrypt().setText(this.vue.getTextCrypt().getText()+e.getKeyChar());
-			}*/
-		}
-		
-	}
-
-
+	
 }
