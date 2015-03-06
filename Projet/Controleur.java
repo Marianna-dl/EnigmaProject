@@ -47,14 +47,15 @@ public class Controleur implements ActionListener, KeyListener{
 			}
 			else{ // Si ils sont connus, on remet les rotors dans leur position initiale et on decrypte
 				rotorInitial();
-				String chDecryptee=this.modele.crypter(this.vue.getTextCrypt().getText());
+				String chDecryptee=this.modele.crypter(traiteChaine(this.vue.getTextCrypt().getText()));
 				this.vue.getTextClear().setText(chDecryptee);
 			}
 		}
 		else if(e.getSource()==this.vue.getBoutonCrypte()){
-			String chaine=this.vue.getTextClear().getText().replaceAll("[\r\n]+", "").toLowerCase();
+			String chaine=traiteChaine(this.vue.getTextClear().getText());
+			
 			if(lettreExiste(chaine)){
-				String cryptee=this.modele.crypter(this.vue.getTextClear().getText());
+				String cryptee=this.modele.crypter(chaine);
 				this.vue.getTextCrypt().setText(cryptee);
 			}
 		}
@@ -93,13 +94,13 @@ public class Controleur implements ActionListener, KeyListener{
 	public void keyReleased(KeyEvent e) {
 		resetColor();
 		if(e.getSource()==this.vue.getTextClear()){// Si le texte tape est un texte en clair, on le crypte
-			char chaine=Character.toLowerCase(e.getKeyChar());
+			char chaine=(traiteChaine(""+e.getKeyChar())).charAt(0);
 			if(!(e.getKeyCode()==KeyEvent.VK_BACK_SPACE) && lettreExiste(chaine)){
 				char lettreCryptee=this.modele.crypter(chaine);
 				this.vue.getTextCrypt().setText(this.vue.getTextCrypt().getText()+lettreCryptee);
 				allumeLettre(lettreCryptee);
 			}
-			else if(!this.vue.getTextClear().getText().equals("") &&e.getKeyCode()==KeyEvent.VK_BACK_SPACE){
+			else if(!this.vue.getTextClear().getText().equals("") && e.getKeyCode()==KeyEvent.VK_BACK_SPACE){
 				String ch;
 				if(this.vue.getTextClear().getText().length()!=0){
 					ch=this.vue.getTextCrypt().getText().substring(0, this.vue.getTextCrypt().getText().length()-1);
@@ -118,7 +119,7 @@ public class Controleur implements ActionListener, KeyListener{
 			}
 		}
 		if(e.getSource()==this.vue.getTextCrypt()){ 
-			char chaine=Character.toLowerCase(e.getKeyChar());
+			char chaine=(traiteChaine(""+e.getKeyChar())).charAt(0);
 			if(!(e.getKeyCode()==KeyEvent.VK_BACK_SPACE) && lettreExiste(chaine)){
 				char lettreCryptee=this.modele.crypter(chaine);
 				this.vue.getTextClear().setText(this.vue.getTextClear().getText()+lettreCryptee);
@@ -144,6 +145,22 @@ public class Controleur implements ActionListener, KeyListener{
 		}
 		
 	}
+	/**
+	 * Traite une chaine pour pouvoir la cryptee (supprime les accents et retour chariot)
+	 *  @param ch
+	 * 			La chaine ou le char qu'on veut traiter 
+	 * @return La chaine sans accents, en minuscule et sans retour chariot
+	 */		
+	public String traiteChaine(String ch){
+		ch=ch.toLowerCase();
+		ch=ch.replaceAll("[\r\n]+", "");
+		ch=ch.replaceAll("è|é|ê|ë", "e");
+		ch=ch.replaceAll("à|á|â|ã|ä|å", "a");
+		ch=ch.replaceAll("ì|í|î|ï", "a");
+		ch=ch.replaceAll("ù|ú|û|ü", "u");
+		return ch;
+	}
+	
 	/**
 	 * Enleve les couleurs du clavier revelateur
 	 */	
