@@ -4,6 +4,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.JLabel;
+
 /**
  * 
  * Classe Controleur
@@ -83,6 +85,27 @@ public class Controleur implements ActionListener, KeyListener{
 				this.modele.getRotor(2).avancer(46-(this.modele.getRotor(2).getPosition()-r3));
 				this.vue.getRotorInitial3().setText(""+r3);
 			}
+			/*verifie si defaire n'est pas vide alors on défait si on peut*/
+			/*verifie si faire n'est pas vide alors on fait si on peut */
+			/**/
+			JLabel[] couples=this.vue.getCouples();
+			String defaireCouple=this.vue.getDestroyCouple().getText().toUpperCase();
+			if(defaireCouple.length()==2 && (int)defaireCouple.charAt(0)>=65 && (int)defaireCouple.charAt(0)<=90 
+					&& (int)defaireCouple.charAt(1)>=65 && (int)defaireCouple.charAt(1)<=90){
+				
+				for(int i=0;i<couples.length;i++){
+					if(couples[i].getText().equals(defaireCouple)){
+						this.vue.getMessageErreur().setText("Couple Defait");
+						this.vue.getMessageErreur().setVisible(true);
+						break;
+					}
+				}
+			}
+			
+			
+			
+			
+			
 		}
 		
 	}

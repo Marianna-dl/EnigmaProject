@@ -44,16 +44,8 @@ public class Vue extends JFrame implements Observer{
     private JLabel cases[];
     private JTextField makeCouple;
     private JTextField destroyCouple;
-    private JLabel couple1;
-    private JLabel couple2;
-    private JLabel couple3;
-    private JLabel couple4;
-    private JLabel couple5;
-    private JLabel couple6;
-    private JLabel couple7;
-    private JLabel couple8;
-    private JLabel couple9;
-    private JLabel couple10;
+    private JLabel tabCouple[];
+    private JLabel messageErreur;
     
     
     public Vue(int w, int h, Machine m){
@@ -83,6 +75,9 @@ public class Vue extends JFrame implements Observer{
         this.show();
     }
     
+    public JLabel getMessageErreur(){
+        return this.messageErreur;
+    }
     public JLabel[] getCases(){
         return this.cases;
     }
@@ -122,41 +117,14 @@ public class Vue extends JFrame implements Observer{
     public boolean getStateCheckbox(){
         return this.box.getState();
     }
-    public JLabel getCouple1(){
-        return this.couple1;
-    }
-    public JLabel getCouple2(){
-        return this.couple2;
-    }
-    public JLabel getCouple3(){
-        return this.couple3;
-    }
-    public JLabel getCouple4(){
-        return this.couple4;
-    }
-    public JLabel getCouple5(){
-        return this.couple5;
-    }
-    public JLabel getCouple6(){
-        return this.couple6;
-    }
-    public JLabel getCouple7(){
-        return this.couple7;
-    }
-    public JLabel getCouple8(){
-        return this.couple1;
-    }
-    public JLabel getCouple9(){
-        return this.couple9;
-    }
-    public JLabel getCouple10(){
-        return this.couple10;
-    }
     public JTextField getMakeCouple(){
         return this.makeCouple;
     }
     public JTextField getDestroyCouple(){
         return this.destroyCouple;
+    }
+    public JLabel[] getCouples(){
+        return this.tabCouple;
     }
     
     
@@ -172,6 +140,9 @@ public class Vue extends JFrame implements Observer{
     }
     //gestionnaire du panel bas
     public JPanel initialisePanelBas(){
+    	this.messageErreur=new JLabel("");
+    	this.messageErreur.setVisible(false);
+    	this.messageErreur.setForeground(Color.RED);
         this.clairLabel=new JLabel("Texte en clair");
         this.crypteLabel=new JLabel("Texte crypte");
         this.textClair=new JTextArea(10,30);
@@ -184,8 +155,12 @@ public class Vue extends JFrame implements Observer{
         this.scrollClair= new JScrollPane(textClair,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         this.decrypter=new JButton("decrypter");
         this.crypter=new JButton("crypter");
-        this.panelAffichage2=new JPanel(new GridLayout(3,1,4,2));
+        JPanel panelErreur= new JPanel();
+        panelErreur.add(this.messageErreur,BorderLayout.CENTER);
+          
+        this.panelAffichage2=new JPanel(new GridLayout(4,1,4,2));
         this.panelAffichage2.setBounds(380, 380, 990, 400);
+        this.panelAffichage2.add(panelErreur);
         JPanel ptext = new JPanel(new GridLayout(1,1,5,2));
         ptext.add(this.crypteLabel);ptext.add(this.clairLabel);
         this.panelAffichage2.add(ptext);
@@ -242,6 +217,28 @@ public class Vue extends JFrame implements Observer{
         this.panelAffichage3.add(j);
         return (this.panelAffichage3);
     }
+    public void initCouples(){
+        int x=0;
+        char lettre1;
+        char lettre2;
+        String couple;
+        int occurences;
+      	for(int j=10;j<10+26;j++){
+        		occurences=0;
+        		 lettre1=Character.toUpperCase(this.model.CONVERT[j]);
+    			 lettre2=Character.toUpperCase(this.model.CONVERT[this.model.getPlugboard().getLetter(j)]);
+    			 couple=""+lettre1+lettre2;
+    			 for(int i=0;i<tabCouple.length;i++){
+    				 if(this.tabCouple[i]!=null && this.tabCouple[i].getText().equals(""+lettre2+lettre1)){
+    					 occurences++;
+    				 }  			
+    			 }
+        		if(this.model.getPlugboard().getLetter(j)!=j && occurences==0){
+        			this.tabCouple[x]=new JLabel(couple);
+        			x++;
+    			}
+      	}
+    }
     //gestionnaire du panel gauche
     public JPanel initialisePanelGauche(){
         this.posRotor1=new JTextField(2);
@@ -257,16 +254,9 @@ public class Vue extends JFrame implements Observer{
         this.appliquer=new JButton("appliquer");
         this.makeCouple=new JTextField(2);
         this.destroyCouple=new JTextField(2);
-        this.couple1=new JLabel("AB");
-        this.couple2=new JLabel("CD");
-        this.couple3=new JLabel("EF");
-        this.couple4=new JLabel("GH");
-        this.couple5=new JLabel("IJ");
-        this.couple6=new JLabel("KL");
-        this.couple7=new JLabel("MN");
-        this.couple8=new JLabel("OP");
-        this.couple9=new JLabel("QR");
-        this.couple10=new JLabel("ST");
+        this.tabCouple=new JLabel[10];
+        initCouples();
+
         this.panelAffichage=new JPanel(new GridLayout(6,1));
         this.panelAffichage.setBounds(30,5,350,775);
         
@@ -326,8 +316,6 @@ public class Vue extends JFrame implements Observer{
         pRot2.setBounds(46, 255, 326, 115);
         //Ajout du JPanel pRot2 dans la fenetre
         this.c.add(pRot2);
-        
-        
         //Panel de gestion du Plugboard
         JPanel pPlug = new JPanel(new GridLayout(6,1,2,2));
         
@@ -343,44 +331,19 @@ public class Vue extends JFrame implements Observer{
         this.makeCouple.setBorder(borderPlug1);
         this.destroyCouple.setBorder(borderPlug2);
         pPlug.add(this.makeCouple);pPlug.add(this.destroyCouple);
-        
+        Border borderCouple;
         //bordure de chaque JLabel contenant un couple
-        Border borderCouple1=BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Couple 1"),BorderFactory.createEmptyBorder(20,10,3,2));
-        Border borderCouple2=BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Couple 2"),BorderFactory.createEmptyBorder(20,10,3,2));
-        Border borderCouple3=BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Couple 3"),BorderFactory.createEmptyBorder(20,10,3,2));
-        Border borderCouple4=BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Couple 4"),BorderFactory.createEmptyBorder(20,10,3,2));
-        Border borderCouple5=BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Couple 5"),BorderFactory.createEmptyBorder(20,10,3,2));
-        Border borderCouple6=BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Couple 6"),BorderFactory.createEmptyBorder(20,10,3,2));
-        Border borderCouple7=BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Couple 7"),BorderFactory.createEmptyBorder(20,10,3,2));
-        Border borderCouple8=BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Couple 8"),BorderFactory.createEmptyBorder(20,10,3,2));
-        Border borderCouple9=BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Couple 9"),BorderFactory.createEmptyBorder(20,10,3,2));
-        Border borderCouple10=BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Couple 10"),BorderFactory.createEmptyBorder(20,10,3,2));
-        
-        //association des bordures avec les couples
-        this.couple1.setBorder(borderCouple1);
-        this.couple2.setBorder(borderCouple2);
-        this.couple3.setBorder(borderCouple3);
-        this.couple4.setBorder(borderCouple4);
-        this.couple5.setBorder(borderCouple5);
-        this.couple6.setBorder(borderCouple6);
-        this.couple7.setBorder(borderCouple7);
-        this.couple8.setBorder(borderCouple8);
-        this.couple9.setBorder(borderCouple9);
-        this.couple10.setBorder(borderCouple10);
-        
-        //on ajoute tout les couples au panel plugboard
-        pPlug.add(this.couple1);pPlug.add(this.couple2);
-        pPlug.add(this.couple3);pPlug.add(this.couple4);
-        pPlug.add(this.couple5);pPlug.add(this.couple6);
-        pPlug.add(this.couple7);pPlug.add(this.couple8);
-        pPlug.add(this.couple9);pPlug.add(this.couple10);
+      for(int i=0; i<this.tabCouple.length;i++){
+        	borderCouple=BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Couple "+i),BorderFactory.createEmptyBorder(20,10,3,2));
+        	 this.tabCouple[i].setBorder(borderCouple);
+        	 pPlug.add(this.tabCouple[i]);
+        }
+ 
         //placement du JPanel Plugboard dans la fenetre
-        pPlug.setBounds(46, 375, 326, 370);
+        pPlug.setBounds(46, 375, 326, 400);
         //ajout du JPanel Plugboard à la fenetre
         this.c.add(pPlug);
-        
-        
-        
+
         //Jpanel pour le boutton appliquer
         JPanel pButton = new JPanel();
         
@@ -412,6 +375,7 @@ public class Vue extends JFrame implements Observer{
     
     //permet d'actualiser la vue en fonction des changement d'Žtat des objets observŽs
     public void update(Observable o,Object ob){
+    	initCouples();
         this.posAcRotor1.setText(String.valueOf(this.model.getRotor(0).getPosition()));
         this.posAcRotor2.setText(String.valueOf(this.model.getRotor(1).getPosition()));
         this.posAcRotor3.setText(String.valueOf(this.model.getRotor(2).getPosition()));
