@@ -1,7 +1,7 @@
 package controller;
 
 
-
+import model.Decrypt;
 
 
 import java.net.URL;
@@ -73,7 +73,7 @@ public class EnigmaController implements Observer{
 	private Machine model;
 	
     private String tabCouple[];
-    
+    private Decrypt decryptage;
     
 	public EnigmaController(){
 		 this.tabCouple=new String[10];
@@ -379,13 +379,22 @@ public class EnigmaController implements Observer{
 		return false;
 	}
 	
+	public void checkParamInconnus(){
+		if(this.paramInconnus.isSelected()){
+			for(int i=0;i<3;i++){
+			((TextField)rotorsInitiaux.getChildren().get(i)).setText("0");
+			this.model.getRotor(i).avancer(this.model.CONVERT.length-(this.model.getRotor(i).getPosition()));	
+			}
+			this.texteDecrypte.setText("");
+		}
+	}
+	
+	
 	public void decrypterTexte(){
 		if(this.paramInconnus.isSelected()){ // On verifie si les parametres des rotors sont connus
-			/*String ch=this.vue.getTextCrypt().getText();
-			String decryptee=this.modele.decrypter(ch);
-			this.vue.getTextCrypt().setText("");
-			this.vue.getTextClear().setText(decryptee);*/
-			this.texteDecrypte.setText("decrypte sans parametres");
+			String ch=this.texteCrypte.getText();
+			ch=traiteChaine(ch);
+			this.texteDecrypte.setText(decryptage.decrypter(ch));
 		}
 		else{ // Si ils sont connus, on remet les rotors dans leur position initiale et on decrypte
 			rotorInitial();
@@ -457,6 +466,10 @@ public class EnigmaController implements Observer{
 		updateCouple();
 		updateClavier();
 
+    }
+    
+    public void setDecryptage() {
+    	this.decryptage=this.app.getMachineDecrypt();
     }
     
     public void updateCouple(){

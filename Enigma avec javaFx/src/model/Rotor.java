@@ -3,8 +3,6 @@ package model;
 
 import java.util.Observable;
 
-import javafx.beans.property.SimpleIntegerProperty;
-
 public class Rotor extends Observable  {
 	private int[] parcoursAller;
 	private int[] parcoursRetour;
