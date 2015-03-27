@@ -394,7 +394,9 @@ public class EnigmaController implements Observer{
 		if(this.paramInconnus.isSelected()){ // On verifie si les parametres des rotors sont connus
 			String ch=this.texteCrypte.getText();
 			ch=traiteChaine(ch);
-			this.texteDecrypte.setText(decryptage.decrypter(ch));
+			//ch=ch.replaceAll(" |'|:|,|\\.", "");
+			//this.texteDecrypte.setText(decryptage.decrypter(ch));
+			this.texteDecrypte.setText(decryptage.decrypterIc(ch));
 		}
 		else{ // Si ils sont connus, on remet les rotors dans leur position initiale et on decrypte
 			rotorInitial();
