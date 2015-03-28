@@ -15,6 +15,28 @@ public class Rotor extends Observable  {
 		this.avancer(pos);
 		this.position=pos;
 	}
+	/**
+	 * Constructeur par copie, sert notamment pour que les threads n'accedent pas aux memes ressources
+	 */	
+	public Rotor(Rotor r){
+		this.parcoursAller=new int[46];
+		for(int i=0;i<46;i++){
+			this.parcoursAller[i]=r.getParcoursAller()[i];
+		}
+		this.parcoursRetour= new int[46];
+		this.createMirror();
+		this.avancer(r.getPosition());
+		this.position=r.getPosition();
+	}
+	
+
+	public int[] getParcoursAller(){
+		return this.parcoursAller;
+	}
+	
+	/**
+	 * Permet de faire le parcours retour en fonction du parcours alle
+	 */	
 	public void createMirror(){
 		for(int i=0;i<parcoursAller.length;i++){
 			parcoursRetour[parcoursAller[i]]=i;
@@ -37,6 +59,9 @@ public class Rotor extends Observable  {
 		notifyObservers();
 	}
 	
+	/**
+	 * Avance les rotors et modifie les entrees/sorties des rotors
+	 */	
 	public void avancer(int i){
 		int k=0;
 		while(k<i){

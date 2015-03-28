@@ -80,16 +80,6 @@ public class Main extends Application {
 
 		launch(args);
 		
-				
-		//on crée nos thread, peut être créer un thread + fork() ?
-		RechercheDico d1=new RechercheDico("T1",1);
-		RechercheDico d2=new RechercheDico("T2",50);
-		RechercheDico d3=new RechercheDico("T3",100);
-		//on les actives
-		d1.start();
-		d2.start();
-		d3.start();
-		
 		
 	}
 }

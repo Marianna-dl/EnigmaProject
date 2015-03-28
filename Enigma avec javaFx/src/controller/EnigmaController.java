@@ -4,6 +4,7 @@ package controller;
 import model.Decrypt;
 
 
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -117,6 +118,9 @@ public class EnigmaController implements Observer{
 		}
 	}
 	
+	/**
+	 * Creer le clavier revelateur avec les ronds et lettres dedans
+	 */	
 	public void updateClavier(){
 		letterCase.getChildren().clear();
 		numberCase.getChildren().clear();
@@ -186,6 +190,9 @@ public class EnigmaController implements Observer{
 
 	}
 	
+	/**
+	 * Decrypte un caractère en temps reel
+	 */	
 	public void decrypteChar(KeyEvent e){
 		 resetColor();
 		String textClear=this.texteDecrypte.getText();
@@ -247,6 +254,10 @@ public class EnigmaController implements Observer{
 			}
 		}
 	}
+	
+	/**
+	 * Enleve les couleurs des lettres allumees
+	 */	
 	public void resetColor(){
 		StackPane stack;
 		for(int i=0;i<10;i++){
@@ -262,6 +273,10 @@ public class EnigmaController implements Observer{
 			((Text)stack.getChildren().get(1)).setFill(Color.WHITE);
 		}
 	}
+	
+	/**
+	 * Crypte un caractère en temps reel
+	 */	
 	public void crypteChar(KeyEvent e){
 		resetColor();
 		String textClear=this.texteDecrypte.getText();
@@ -294,7 +309,7 @@ public class EnigmaController implements Observer{
 	}
 	
 	/**
-	 * Permet de reculer un rotor d'un cran
+	 * Permet de reculer les rotors d'un cran
 	 */	
 	public void reculerRotor(){
 		this.model.getRotor(0).avancer(this.model.CONVERT.length-1);
@@ -307,8 +322,9 @@ public class EnigmaController implements Observer{
 
 	}
 	
-	
-	
+	/**
+	 * Initialise les couples du plugboard dans l'interface
+	 */	
 	 public void initCouples(){
 	        int x=0;
 	        char lettre1;
@@ -333,6 +349,10 @@ public class EnigmaController implements Observer{
 
 	    }
 	 
+	 
+	/**
+	* Crypte tout un texte
+	*/	 
 	public void crypterTexte(){
 		String chaine=traiteChaine(this.texteDecrypte.getText());
 		
@@ -379,6 +399,9 @@ public class EnigmaController implements Observer{
 		return false;
 	}
 	
+	/**
+	 * Verifie si la checkbox "parametres inconnus" est selectionnee
+	 */	
 	public void checkParamInconnus(){
 		if(this.paramInconnus.isSelected()){
 			for(int i=0;i<3;i++){
@@ -389,12 +412,14 @@ public class EnigmaController implements Observer{
 		}
 	}
 	
-	
-	public void decrypterTexte(){
+	/**
+	 * Decrypte tout un texte
+	 */	
+	public void decrypterTexte() throws InterruptedException{
 		if(this.paramInconnus.isSelected()){ // On verifie si les parametres des rotors sont connus
 			String ch=this.texteCrypte.getText();
 			ch=traiteChaine(ch);
-			//ch=ch.replaceAll(" |'|:|,|\\.", "");
+			//ch=ch.replaceAll(" [^a-zA-Z]", "");
 			//this.texteDecrypte.setText(decryptage.decrypter(ch));
 			this.texteDecrypte.setText(decryptage.decrypterIc(ch));
 		}
@@ -421,6 +446,9 @@ public class EnigmaController implements Observer{
 		return ch;
 	}
 	
+	/**
+	 * Met les rotors dans la position initiale selectionnee
+	 */	
 	public void rotorInitial(){
 		int posrotor1=Integer.parseInt(((TextField)rotorsInitiaux.getChildren().get(0)).getText());
 		int posrotor2=Integer.parseInt(((TextField)rotorsInitiaux.getChildren().get(1)).getText());
@@ -430,8 +458,10 @@ public class EnigmaController implements Observer{
 		this.model.getRotor(2).avancer(this.model.CONVERT.length-(this.model.getRotor(2).getPosition()-posrotor3));	
 	}
 	
+	/**
+	 * Applique le changement de positions des rotors
+	 */	
 	public void updatePosRotor(){
-		System.out.println("rotor");
 		int r1=-1;
 		int r2=-1;
 		int r3=-1;
@@ -456,6 +486,9 @@ public class EnigmaController implements Observer{
 		}
 	}
 	
+	/**
+	 * Permet d'acceder a l'ensemble de l'application
+	 */	
     public void setApp(Main app) {
         this.app = app;
     	this.model=app.getMachine();
@@ -470,10 +503,16 @@ public class EnigmaController implements Observer{
 
     }
     
+	/**
+	 * Permet d'acceder a la classe decryptage
+	 */	
     public void setDecryptage() {
     	this.decryptage=this.app.getMachineDecrypt();
     }
     
+	/**
+	 * Change l'affichage des couples si ceux-ci ont ete changes
+	 */	
     public void updateCouple(){
     	listeCouples.getChildren().clear();
 		Label couple;
@@ -491,6 +530,9 @@ public class EnigmaController implements Observer{
 		
     }
     
+	/**
+	 * Transmet les modifications des couples a la partie metier
+	 */	
     public void reglagescouples(){
     	String couple=this.defaireCouple.getText().toUpperCase();
 		
@@ -522,6 +564,9 @@ public class EnigmaController implements Observer{
 		}
 	}
     
+	/**
+	 * Verifie qu'on peut bien creer un couple
+	 */	
 	public boolean verifieCouple(String couple){
 		int i=0;
 		do{
@@ -536,7 +581,9 @@ public class EnigmaController implements Observer{
 		return true;
 		
 	}
-
+	/**
+	 * Permet de defaire un couple
+	 */	
 	public void defaireCouple(String couple){
 		int i=getIndiceCouple(couple);
 		if(i != -1){
@@ -549,7 +596,7 @@ public class EnigmaController implements Observer{
 				}	
 			}	
 		}
-	
+
 	public int getIndiceCouple(String couple){
 		for(int i=0;i<this.tabCouple.length;i++){
 			if(this.tabCouple[i].equals(couple)){
@@ -568,6 +615,11 @@ public class EnigmaController implements Observer{
 		}
 		return count;
 	}
+	
+	/**
+	 * Verifie si le couple existe deja
+	 * @return true si il existe, false sinon
+	 */	
 	public boolean coupleExiste(String couple){
 		int i=0;
 		do{
@@ -583,6 +635,11 @@ public class EnigmaController implements Observer{
 		}while(i<this.tabCouple.length);
 		return false;
 	}
+	
+	/**
+	 * Calcule l'emplacement ou le prochain couple peut se mettre
+	 * @return i , l'indice de la case libre, -1 si il n'y a pas de place
+	 */	
 	public int calculEmplacementLibre(String[] couples){
 		for(int i=0;i<couples.length;i++){
 			if(couples[i]==""){

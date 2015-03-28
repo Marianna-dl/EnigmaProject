@@ -7,9 +7,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import thread.FirstThread;
+import thread.SecondThread;
+
 public class Decrypt {
 	private Machine m;
 	private String[] dico;
+	private FirstThread first;
+	private Thread thFirst;
+/*	private SecondThread second;
+	private Thread thSecond;*/
 	
 	public Decrypt(Machine mach,String file) throws IOException{
 		BufferedReader b=null;
@@ -27,52 +34,45 @@ public class Decrypt {
 			dico[i]=temp.trim();
 			i++;
 		}
+		initialiseThread();
 	}
-	/*public void decrypter(String chaine){
-		ArrayList<String> possible = new ArrayList<String>();
-		String ch=chaine;
-		//Comparaison de chaque mot du dicto pour voir si on peut le placer dans la chaine 
-		for(int i=0;i<600;i++){
-			int debut=0,fin=dico[i].length();
-			boolean added=false;
-			while(fin < chaine.length() && !added){
-				if(this.compareLettre(chaine.substring(debut, fin),dico[i])){
-					System.out.println(dico[i]);
-					System.out.println(chaine.substring(debut, fin));
-					//peut-etre rajouter les positions o% le mot peut-être placer dans la chaine
-					possible.add(dico[i]);
-					added=true;
-				}
-				debut++;
-				fin++;
-			}
-		}
-		/*for(int i=0;i<possible.size();i++){
-			System.out.println(possible.get(i));
-		}*/
-		/*//cryptage des mots possibles 
-		for(int i=0;i<possible.size();i++){
-			boolean correspond =false;
-			int debut=0,fin=possible.get(i).length();
-			while(m.getRotor(2).getPosition()<46 && !correspond){
-				String temp = m.crypter(possible.get(i));
-				
-				//A faire (changer chaque rotor + changer plugboard + comparer un mot a plusieurs endroits dans la chaine)
-			}
-		}
-
-		return chaine;
-	}*/
-	public boolean compareLettre(String ch1, String ch2){
-		for(int i=0;i<ch1.length();i++){
-			if(ch1.charAt(i)==ch2.charAt(i)){
-				return false;
-			}
-		}
-		return true;
+	
+	/**
+	 * Constructeur par copie, les threads ne doivent pas partager les memes ressources!
+	 */	
+	public Decrypt(Decrypt d) throws IOException{
+		this.m= new Machine(d.getMachine());
+		this.dico=d.getDico();
+		this.first=null;
+		this.thFirst=null;
+	}
+	
+	public String[] getDico(){
+		return this.dico;
 	}
 
-	//Calcul des occurences pour chaque lettre de l'alphabet (a-z)
+	public Machine getMachine(){
+		return this.m;
+	}
+	
+	/**
+	 * Initialise les threads et les mets en pause dans leur methode run
+	 */	
+	public void initialiseThread() throws IOException{
+		this.first=new FirstThread(this);
+		this.thFirst=new Thread(first);
+		thFirst.start();
+		/*this.second=new SecondThread(this);
+		this.thSecond=new Thread(second);
+		thSecond.start();*/
+	}
+	
+	/**
+	 * Calcule les occurences de chaque lettres (a-z) dans une chaine
+	 *  @param s
+	 * 			La chaine a analyser
+	 * @return int[] contenant toutes les occurences des differentes lettres
+	 */	
 	public int[] calculOccurences(String s){
 		ArrayList<Integer> n=new ArrayList<Integer>();
 		ArrayList<Character> charVerifie=new ArrayList<Character>();
@@ -104,7 +104,12 @@ public class Decrypt {
 		return apparitions;
 	}
 	
-	//On calcule l'indice de coincidence : occurence de la lettre/longueur de chaine
+	/**
+	 * Calcule l'indice de coincidence d'une chaine: occurences-lettre/longueur-chaine
+	 *  @param s
+	 * 			La chaine a calculer
+	 * @return l'indice de coincidence
+	 */	
 	public float calculIndiceCo(String s){
 		int [] nbApparitions=calculOccurences(s);
 		
@@ -118,64 +123,36 @@ public class Decrypt {
 		
 	}
 	
-	public String decrypterIc(String s){
-		
-		rotorInitial();
-		afficherPos();
-		System.out.println(calculIndiceCo(s));
-		String chDecryptee=this.m.crypter(s);
-		chDecryptee=chDecryptee.replaceAll(" |'|:|,|\\.", "");
-	    chDecryptee=chDecryptee.replaceAll("[0-9]", "");
-		float indice=calculIndiceCo(chDecryptee);
-		float indiceMax=indice;
+	/**
+	 * Decrypte une chaine selon son indice de coincidence
+	 *  @param ch
+	 * 			La chaine que l'on veut decryptee
+	 * @return La chaine decryptee
+	 */		
+	public String decrypterIc(String s) throws InterruptedException{
 		int posR1=0;
 		int posR2=0;
 		int posR3=0;
+		String ch="";
 		rotorInitial();
-		afficherPos();
-		String ch=chDecryptee;
-		
-		for(int tRotor=0; tRotor<46;tRotor++){	
-			for(int sRotor=0; sRotor<46;sRotor++){
-				this.m.getRotor(2).avancer(this.m.CONVERT.length-(this.m.getRotor(2).getPosition()-tRotor));
-				this.m.getRotor(0).avancer(this.m.CONVERT.length-(this.m.getRotor(0).getPosition()));
-				for(int pRotor=0; pRotor<46;pRotor++){	
-			
-					this.m.getRotor(1).avancer(this.m.CONVERT.length-(this.m.getRotor(1).getPosition()-sRotor));
-					System.out.println("r1 "+this.m.getRotor(0).getPosition());
-					System.out.println("r2 "+this.m.getRotor(1).getPosition());
-					System.out.println("r3 "+this.m.getRotor(2).getPosition());
-					    chDecryptee=this.m.crypter(s);
-					    chDecryptee=chDecryptee.replaceAll(" |'|:|,|\\.", "");
-					    chDecryptee=chDecryptee.replaceAll(" [0-9]", "");
-						indice=calculIndiceCo(chDecryptee);
-						if(indice>indiceMax){//On garde l'indice de coincidence le plus eleve, ca veut dire que le texte est proche du francais
-							indiceMax=indice;
-							ch=chDecryptee;
-							posR1=pRotor-1; //On sauvegarde la position des rotors pour pouvoir decrypter apres
-							posR2=sRotor;
-							posR3=tRotor;
-							System.out.println("indiceMax "+indice);
-						}
-						if(indiceMax>=0.065){//On peut essayer de finir le boucle plus vite. On peut supposer que si l'indice est superieur a 0.065 alors 
-												//qu'il est tres probable que ce soit bien notre texte decrypte
-							this.m.getRotor(0).avancer(this.m.CONVERT.length-(this.m.getRotor(0).getPosition()-posR1));
-							this.m.getRotor(1).avancer(this.m.CONVERT.length-(this.m.getRotor(1).getPosition()-posR2));
-							this.m.getRotor(2).avancer(this.m.CONVERT.length-(this.m.getRotor(2).getPosition()-posR3));
-							ch=this.m.crypter(s);
-							return ch;
-							
-						}
-					this.m.getRotor(0).avancer(this.m.CONVERT.length-(this.m.getRotor(0).getPosition()-pRotor));
+		first.setString(s);//Je n'utilise qu'un thread pour le moment
 
-				}
-				 this.m.getRotor(1).avancer(1);
-			}
-			 this.m.getRotor(2).avancer(1);
+		if(thFirst.isAlive()){
+			first.unpause();
 		}
-		System.out.println(posR1);
-		System.out.println(posR2);
-		System.out.println(posR3);
+		else{
+			System.out.println("allo");
+			this.thFirst=new Thread(first);
+			thFirst.start();
+			first.unpause();
+		}
+		thFirst.join(); //On attends l'arret du thread
+		posR1=first.getPosRotors()[0];
+		posR2=first.getPosRotors()[1];
+		posR3=first.getPosRotors()[2];
+			
+		System.out.println(first.getIndice());
+		
 		//On regle a nouveau les rotors et on decrypte
 		this.m.getRotor(0).avancer(this.m.CONVERT.length+posR1);
 		this.m.getRotor(1).avancer(this.m.CONVERT.length+posR2);
@@ -184,33 +161,15 @@ public class Decrypt {
 		afficherPos();
 		ch=this.m.crypter(s);
 		return ch;
-		
-	
-	
-	 
-	
+
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	/**
+	 * Decrypte une chaine si un mot francais est trouve
+	 *  @param ch
+	 * 			La chaine que l'on veut decryptee
+	 * @return La chaine decryptee
+	 */	
 	public String decrypter(String s){
 		String decryptee="impossible de decrypter la phrase";
 		int trouve=-1;
@@ -242,7 +201,11 @@ public class Decrypt {
 		return decryptee;
 	}
 	
-	//Met les rotor en position 0 0 0
+	
+	/**
+	 * Met les rotors en position initiale (0 0 0)
+	 *  
+	 */	
 	public void rotorInitial(){
 	
 		this.m.getRotor(0).avancer(this.m.CONVERT.length-(this.m.getRotor(0).getPosition()));
@@ -250,7 +213,14 @@ public class Decrypt {
 		this.m.getRotor(2).avancer(this.m.CONVERT.length-(this.m.getRotor(2).getPosition()));	
 	}
 	
-	//test les 46^3 possibilites pour chaque mot donne et verifie si il est contenu dans la chaine cryptee
+	/**
+	 * Test les 46^3 possibilites de cryptage pour chaque mot et verifie si il est contenu dans la chaine
+	 *  @param mot
+	 * 			Le mot que l'on va crypte et cherche dans la chaine
+	 * 	@param s
+	 * 			La chaine de reference que l'on veut decrypter
+	 * @return La chaine decryptee
+	 */	
 	public int cryptagePossibleMot(String mot, String s){
 		String m="";
 			int r;
@@ -284,7 +254,10 @@ public class Decrypt {
 			 return -1;
 	}
 	
-	//Regle la position des rotors selon la longueur de la chaine pour pouvoir ensuite decrypter
+	/**
+	 * Regle les rotors en fonction de la longueur de la chaine
+	 * Fais reculer les rotors afin d'avoir la bonne position de depart
+	 */	
 	public void regleRotor(String s, String m, int pos){
 		System.out.println("pos "+this.m.getRotor(0).getPosition());
 		this.m.getRotor(0).avancer(this.m.CONVERT.length-(s.substring(0, pos).length()+m.length()));
@@ -296,7 +269,9 @@ public class Decrypt {
 		}
 	}
 	
-	
+	/**
+	 * Affiche la position des trois rotors
+	 */	
 	public void afficherPos(){
 		System.out.println(this.m.getRotor(0).getPosition());
 		System.out.println(this.m.getRotor(1).getPosition());
