@@ -82,25 +82,26 @@ public class FirstThread extends Thread {
 					while(pRotor<46 && !paused){
 						this.decryptage.getMachine().getRotor(2).avancer(this.decryptage.getMachine().CONVERT.length-(this.decryptage.getMachine().getRotor(2).getPosition())+tRotor);
 						this.decryptage.getMachine().getRotor(1).avancer(this.decryptage.getMachine().CONVERT.length-(this.decryptage.getMachine().getRotor(1).getPosition())+sRotor);
-						System.out.println("r1 "+this.decryptage.getMachine().getRotor(0).getPosition());
-						System.out.println("r2 "+this.decryptage.getMachine().getRotor(1).getPosition());
-						System.out.println("r3 "+this.decryptage.getMachine().getRotor(2).getPosition());
+						//System.out.println("r1 "+this.decryptage.getMachine().getRotor(0).getPosition());
+						//System.out.println("r2 "+this.decryptage.getMachine().getRotor(1).getPosition());
+						//System.out.println("r3 "+this.decryptage.getMachine().getRotor(2).getPosition());
 						    chDecryptee=this.decryptage.getMachine().crypter(aDecrypter);
 							chDecryptee=chDecryptee.replaceAll("[^a-z]", "");
 							indice=this.decryptage.calculIndiceCo(chDecryptee);
-							if(indice<0.090 && indice>=indiceMax){//On garde l'indice de coincidence le plus eleve, ca veut dire que le texte est proche du francais
+							if(indice<0.073 && indice>=indiceMax){//On garde l'indice de coincidence le plus eleve, ca veut dire que le texte est proche du francais
 								indiceMax=indice;
 								this.posRotors[0]=pRotor; //On sauvegarde la position des rotors pour pouvoir decrypter apres
 								this.posRotors[1]=sRotor;
 								this.posRotors[2]=tRotor;
-									System.out.println("indiceMax "+indice);
+								System.out.println("indiceMax "+indice);
 								
 							}
-							if(indiceMax>=0.065 && chDecryptee.length()>=100){//On peut essayer de finir la boucle plus vite. On peut supposer que si l'indice est superieur a 0.065 alors 
+							if(indiceMax>=0.072 && chDecryptee.length()>=100){//On peut essayer de finir la boucle plus vite. On peut supposer que si l'indice est superieur a 0.065 alors 
 													//lorsque la longueur du texte est grande, qu'il est tres probable que ce soit bien notre texte decrypte
 								 pause(); //si c'est bon, on stop le thread
 								
 							}
+							
 							pRotor++;
 							this.decryptage.getMachine().getRotor(0).avancer(this.decryptage.getMachine().CONVERT.length-(this.decryptage.getMachine().getRotor(0).getPosition())+pRotor);
 

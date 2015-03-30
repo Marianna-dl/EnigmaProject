@@ -17,6 +17,7 @@ public class Decrypt {
 	private Thread thFirst;
 /*	private SecondThread second;
 	private Thread thSecond;*/
+
 	
 	public Decrypt(Machine mach,String file) throws IOException{
 		BufferedReader b=null;
@@ -79,7 +80,8 @@ public class Decrypt {
 		int occurences;
 		int j;
 		int i=0;
-		do{
+		while(i<s.length()){
+	
 				occurences=0;
 					j=s.indexOf(s.charAt(i));
 					while(!charVerifie.contains(s.charAt(i)) && j!=-1){
@@ -94,7 +96,7 @@ public class Decrypt {
 					}
 			i++;
 			
-		}while(i<s.length());
+		};
 		
 		
 		int [] apparitions=new int[n.size()];
@@ -157,8 +159,7 @@ public class Decrypt {
 		this.m.getRotor(0).avancer(this.m.CONVERT.length+posR1);
 		this.m.getRotor(1).avancer(this.m.CONVERT.length+posR2);
 		this.m.getRotor(2).avancer(this.m.CONVERT.length+posR3);
-			
-		afficherPos();
+	
 		ch=this.m.crypter(s);
 		return ch;
 
